@@ -1,0 +1,102 @@
+PEP: 804
+Title: Creation of a CPython mirror
+Author: Stan Ulbrych <stanulbrych@gmail.com>
+Sponsor: someone
+Discussions-To: Pending
+Status: Draft
+Type: Process
+Created: 28-Aug-2025
+
+
+Abstract
+========
+
+This PEP proposes the creation of an official read-only mirror of the
+`CPython Git repository <https://github.com/python/cpython>`_,
+currently hosted on GitHub (since :pep:`512`), on an additional hosting
+platform to ensure resilience.
+
+
+Rationale
+=========
+
+The authors believe that mirroring the repository on an alternative
+platform will limit
+`vendor lock-in <https://en.wikipedia.org/wiki/Vendor_lock-in>`_  and improve
+the security, resilience, and accessibility of CPython without impacting the
+current development workflow.
+Currently, the up-to-date CPython source code is officially available only
+on GitHub, following the retirement of `hg.python.org <https://hg.python.org/>`_.
+
+Many open source projects provide mirrors, for example
+`GNOME <https://github.com/GNOME>`_, `KDE <https://github.com/KDE?>`_,
+`Git <https://github.com/git/git>`_, `GCC <https://github.com/gcc-mirror/gcc>`_
+and `OpenBSD <https://github.com/openbsd/src>`_.
+
+.. note::
+
+    The standard clone of a repository does not pull all information, see
+    the `Git documentation <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---mirror>`_
+    for more information.
+
+Depending on a single storage provider carries the risk that if the provider
+were to go down, the data stored on the platform is lost.
+This is similar to maintaining backups of personal data (photos, documents, etc.).
+
+In the event of a temporary outage, development can still continue as
+one can pull the most recent state of the repository from the mirror.
+In the event of a permanent outage, having a mirror with the
+``python`` namespace would allow for a much smoother migration to a new
+contribution platform.
+
+Some people prefer using open source platforms to develop open source projects.
+Since `GitHub <github.com>`_ is not open source, a mirror would allow us to
+address this concern.
+
+The mirror is **not** intended to replace the host for contributions
+(issues, pull requests, CI), but to provide an additional
+read-only distribution channel for the Git data (commits, branches, tags etc.)
+as having multiple contribution platforms would introduce far too much
+complexity and asynchrony.
+
+Mirrors require little maintenance and should not have a financial impact on
+the PSF, since many hosting providers offer free plans which are sufficient for
+a mirror.
+
+
+Specification
+=============
+
+The repository will be mirrored using Git's
+`--mirror <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---mirror>`__
+option, either using a platform's built-in integration or a script.
+The repository should be in the platform's equivalent of the GitHub
+`python organization <https://github.com/python/>`_
+
+The fact that the repository is a mirror will be clearly noted in the description
+so as to avoid possible confusion.
+
+
+Security Implications
+=====================
+
+This PEP increases the security workload, as two platforms must be secured.
+The mirror being read-only alleviates some risk of compromise, but not all.
+
+Access to the repository should follow the
+`principle of least privilege <https://en.wikipedia.org/wiki/Principle_of_least_privilege>`_.
+
+
+Open Questions
+==============
+
+What platform should be used? The platform should be free, as so to not have a
+financial impact on the PSF. There are several options, for example
+`GitLab <https://gitlab.com/>`_ and `codeberg <https://codeberg.org/>`_.
+
+
+Copyright
+=========
+
+This document is placed in the public domain or under the
+CC0-1.0-Universal license, whichever is more permissive.
